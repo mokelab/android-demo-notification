@@ -4,6 +4,7 @@ import androidx.compose.runtime.Composable
 import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
+import com.mokelab.lesson.notification.feature.action.TapActionScreen
 import com.mokelab.lesson.notification.feature.standard.StandardScreen
 
 @Composable
@@ -14,11 +15,19 @@ fun MainApp() {
         composable("/") {
             MainScreen(toStandard = {
                 navController.navigate("/standard")
-            })
+            },
+                toAction = {
+                    navController.navigate("/action")
+                }
+            )
         }
 
         composable("/standard") {
             StandardScreen()
+        }
+
+        composable("/action") {
+            TapActionScreen()
         }
     }
 }

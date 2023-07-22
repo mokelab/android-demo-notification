@@ -15,6 +15,7 @@ import androidx.compose.ui.res.stringResource
 @Composable
 fun MainScreen(
     toStandard: () -> Unit,
+    toAction: () -> Unit,
 ) {
     Scaffold(
         topBar = {
@@ -29,6 +30,14 @@ fun MainScreen(
                     },
                     modifier = Modifier.clickable {
                         toStandard()
+                    }
+                )
+                ListItem(
+                    headlineContent = {
+                        Text("Action")
+                    },
+                    modifier = Modifier.clickable {
+                        toAction()
                     }
                 )
             }

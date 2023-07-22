@@ -16,3 +16,4 @@ dependencyResolutionManagement {
 rootProject.name = "Notifications"
 include(":app")
 include(":feature:standard")
+include(":feature:action")
