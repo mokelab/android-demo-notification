@@ -2,6 +2,7 @@ package com.mokelab.lesson.notification.feature.action
 
 import android.Manifest
 import android.annotation.SuppressLint
+import android.app.PendingIntent
 import android.content.Context
 import android.content.pm.PackageManager
 import android.os.Build
@@ -25,13 +26,15 @@ import androidx.core.app.NotificationManagerCompat
 
 @OptIn(ExperimentalMaterial3Api::class)
 @Composable
-fun TapActionScreen() {
+fun TapActionScreen(
+    createPendingIntent: () -> PendingIntent,
+) {
     val context = LocalContext.current
     val launcher = rememberLauncherForActivityResult(
         ActivityResultContracts.RequestPermission(),
     ) { accepted ->
         if (accepted) {
-            showNotification(context)
+            showNotification(context, createPendingIntent)
         }
     }
     Scaffold(
@@ -44,7 +47,7 @@ fun TapActionScreen() {
         ) {
             Button(onClick = {
                 prepareNotification(context, launcher) {
-                    showNotification(context)
+                    showNotification(context, createPendingIntent)
                 }
             }) {
                 Text("Show notification")
@@ -72,7 +75,10 @@ private fun prepareNotification(
 }
 
 @SuppressLint("MissingPermission")
-private fun showNotification(context: Context) {
+private fun showNotification(
+    context: Context,
+    createPendingIntent: () -> PendingIntent,
+) {
     val manager = NotificationManagerCompat.from(context)
     // create channel
     val channel = NotificationChannelCompat.Builder(
@@ -83,6 +89,9 @@ private fun showNotification(context: Context) {
         .build()
     manager.createNotificationChannel(channel)
 
+    // create intent
+    val pendingIntent = createPendingIntent()
+
     // create notification
     val notification = NotificationCompat.Builder(
         context, "channel_id",
@@ -90,6 +99,8 @@ private fun showNotification(context: Context) {
         .setSmallIcon(R.drawable.ic_android_black_24dp)
         .setContentTitle("Title")
         .setContentText("Content")
+        .setContentIntent(pendingIntent)
+        .setAutoCancel(true)
         .build()
 
     // show notification
